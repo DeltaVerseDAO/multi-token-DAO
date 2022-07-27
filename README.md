@@ -143,7 +143,7 @@ create .env file in root directory.
 ```bash
     API_URL = "https://eth-ropsten.alchemyapi.io/v2/your-api-key"
     PRIVATE_KEY = "YOUR-METAMASK-MNEMONICS"
-    POLYGON_SCAN_API_KEY = "YOUR-POLYGONSCAN_API_KEY"
+    POLYGON_SCAN_API_KEY = "YOUR-POLYGON_SCAN_API_KEY"
 
 ```
 
