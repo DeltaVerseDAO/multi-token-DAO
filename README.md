@@ -21,6 +21,7 @@ In MultiToken DAO either you can vote with Token or NFT.
 - Nappy Token will use to mint token and transfer to voter for use in voting.
 - First owner will mint the token. There is no fixed supply to mint the token.
 - This contract will also use for delegate the tokens. User will have to call delegate() function for voting power.
+- Voting power is depend on decimal of Token.
 
 ## NappyNFT
 
@@ -29,6 +30,7 @@ In MultiToken DAO either you can vote with Token or NFT.
 - NappyNFt will use to mint NFT and transfer to voter for use in voting.
 - First owner will mint the NFT. There is no fixed supply to mint the NFT.
 - This contract will also use for delegate the NFT. User will have to call delegate() function for voting power.
+- Voting power of one NFT is one.
 
 ## TimeLock
 
@@ -131,7 +133,7 @@ In MultiToken DAO either you can vote with Token or NFT.
 
 - You have to send some ether or any ERC20Token or ERC721 to Treasury.
 - This contract will store the ether. Anyone can send the ether to this contract.
-- Only owner can withdraw the funds.
+- Only owner(timelock) can withdraw the funds.
 - It transfer ownership to `TimeLock` Contract using `transferOwnership` function.
 
 ## Important Step
