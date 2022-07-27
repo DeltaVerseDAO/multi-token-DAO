@@ -1,129 +1,247 @@
-# MultiTokenDAO
+# Multi-Token-DAO-Smart-Contract
 
-- An on-chain DAO with multiple voting tokens.
-- Voting tokens can be ERC20 or ERC721.
+## What is DAO ?
 
+DAO stands for Decentralized Autonomous Organization an open-source Blockchain protocol governed by a set of rules, created by its members, which automatically execute certain actions without the need for intermediaries. DAO is a community-led entity with no central authority. It is fully autonomous and transparent.
 
-## Contract: ERC20VotingToken.sol
+In MultiToken DAO either you can vote with Token or NFT.
 
-This contract deploys an **ERC20 token with voting rights**.
+### There are five Contract.
 
-- Name: "ERC20VotingToken"
-- Symbol: "ERC20VT"
-- Decimals: 0
+- Nappy Token (ERC20Token)
+- NappyNFT (ERC721Token)
+- TimeLock
+- Governance
+- Treasury
 
-- This token will be used to vote on proposals created in the MultiTokenDAO contract.
+## Nappy Token
 
-- Each token delegated gives 1 voting power.
+- Token Name: Nappy Token
+- Token Symbol: NPY
+- Nappy Token will use to mint token and transfer to voter for use in voting.
+- First owner will mint the token. There is no fixed supply to mint the token.
+- This contract will also use for delegate the tokens. User will have to call delegate() function for voting power.
 
-- The contract owner can call the **mint()** function to mint tokens to an address.
-It takes the address and the amount of tokens to mint as arguments.
+## NappyNFT
 
-- Users would need to call **delegate()** function and pass their own address as argument in order to create a snapshot of their voting power, as only holding the tokens does not give an address the equivalent voting power.
+- Token Name: NappyNFT 
+- NFT Symbol: NPY
+- NappyNFt will use to mint NFT and transfer to voter for use in voting.
+- First owner will mint the NFT. There is no fixed supply to mint the NFT.
+- This contract will also use for delegate the NFT. User will have to call delegate() function for voting power.
 
----
+## TimeLock
 
-## Contract: ERC721VotingToken.sol
+- This contract will set as owner of the Treasury contract.
 
-This contract deploys an **ERC721 token with voting rights**.
+- It will decide how many block's to wait to execute proposal.
 
-- Name: "ERC721VotingToken"
-- Symbol: "ERC721VT"
+## Governance
 
-- This token will also be used to vote on proposals created in the MultiTokenDAO contract.
+- This contract will create the proposal and vote for the same.
+- In this contact user can create the proposal, vote, cancel.
+- There are several stages for proposal.
 
-- Each token delegated gives 1 voting power.
+#### Stages
 
-- The contract owner can call the **mint()** function to mint tokens to an address.
-It takes the target address and the token metadataURI as arguments.
+| Sr No | Stages      |
+| :---- | :---------- |
+| `0`   | `Pending`   |
+| `1`   | `Active`    |
+| `2`   | `Cancelled` |
+| `3`   | `Defeated`  |
+| `4`   | `Succeeded` |
+| `5`   | `Queued`    |
+| `6`   | `Expired`   |
+| `7`   | `Executed`  |
 
-- Users would need to call **delegate()** function and pass their own address as argument in order to create a snapshot of their voting power, as only holding the tokens does not give an address the equivalent voting power.
+- First of all we will deploy the contract. We will get contract address of all deploy contract.
 
----
-
-## Contract: Treasury.sol
-
-- This contract will hold ether, ERC20, ERC721, and ERC1155 tokens and will be used to send the same as addresses via executed proposals.
-
-- The members of the MultiTokenDAO can create a proposal where they can specify which function to call with its required arguments.
-
-- If the MultiTokenDAO members pass in favor of the proposal, then the said amount will be sent to the address.
-
-- The TimeLock contract is given the ownership of this contract, so that the only way of moving funds out is by creating a proposal and passing it.
-
----
-
-## Contract: TimeLock.sol
-
-- This contract is set as the **owner of the Treasury contract**.
-
-- It sets a minimum delay time(number of blocks), that a passed proposal has to wait before getting executed.
-
-- The **MultiTokenDAO contract** is set as the only **PROPOSER**, which means only that contract can suggest this contract to do a transaction through the Treasury contract.
-
-- The **Null Address** is set as the **EXECUTOR**, which gives each and every address the right to execute a passed proposal, given that it has waited out the proposed delay time.
-
----
-
-## Contract: MultiTokenDAO.sol
-
-- This contract creates the DAO ecosystem in which an user can create a proposal and vote on it using the supported ERC20 and ERC721 voting tokens.
-
-- Users can only vote with one supported token for the same proposalId.
-
-- Users can create a proposal, cancel it, vote on it, queue it and execute it.
-
-- The proposal stages are as follows:
-
-```script
-    Number          Stage
-
-    0               Pending
-    1               Active
-    2               Canceled
-    3               Defeated
-    4               Succeeded
-    5               Queued
-    6               Expired
-    7               Executed
+```bash
+  npx hardhat run scripts/deploy.js --network mumbai
 ```
 
----
+- `Nappy Token` : `0xb1E2d34eE670F4B91C8015547D4E1F1f89a61f92`
+- `NappyNFT` : `0x0c85214E55324d86395A8148Fe4FB395f185Ae02`
+- `TimeLock` : `0xf43d582A34BfD50395CB8A96150E54a89D507BE3`
+- `Governance` : `0x4dDe5bc62a29DE1e7aE84902E8D0ddA7Fb0D03fE`
+- `Treasury` : `0x7dfBd09387E7b903edb40db98515bAF8c3158722`
 
-- An user can interact with the **propose()** function to create a new proposal, which returns the proposal id of the newly created proposal.
+- After this we will call createProposal scripts.
 
-- Users can interact with the **castVote()** function to cast their vote on a proposal. It takes 3 arguments=> tokenIndex, proposal id and support.
-
-- tokenIndex refers to index of token that user wants to vote with, in the votingTokens array. (See contracts/governance/extensions/GovernorVotes.sol)
-
-- Here 0 => ERC20 voting token and 1 => ERC721 voting token.
-
-- User has 3 values for support when voting:
-
-```script
-    Choice      Meaning
-
-    0           Against the proposal
-    1           For/ In favor of the proposal
-    2           Abstain
+```bash
+  npx hardhat run scripts/createProposal.js --network mumbai
 ```
 
-- If the proposal passes, then any user can interact with the **queue()** function to queue the proposal for execution.
+- After this function we will get proposal Id.
 
-- After that, when the delay period has passed, any user can interact with the **execute()** function which will execute the proposal and the funds will be sent to the address.
+- `Proposal Id` : `63443021524830328481685862710718740376614608430634741687791276264061360147468`
 
----
----
+- Now we will check state of the DAO.
 
-### Basic Sample Hardhat Project
+- Before check the state we have to wait for to mine 20 Blocks to mine.
 
-This project demonstrates a basic Hardhat use case.
-
-```shell
-npx hardhat compile
-npx hardhat clean
-npx hardhat test
-npx hardhat node
-node scripts/sample-script.js
-npx hardhat help
+```bash
+  npx hardhat run scripts/checkState.js --network mumbai
 ```
+
+- It will give state `1` means our proposal is `Active`.
+
+- Now everyone will vote using castVote function.
+
+- Some will vote with NFT & some will vote with Tokens.
+
+```bash
+  npx hardhat run scripts/voteOnProposal.js --network mumbai
+```
+
+- Now we will check state of the DAO.
+
+```bash
+  npx hardhat run scripts/state.js --network mumbai
+```
+
+- It will give state `4` means our proposal is `Succeeded`.
+
+- The voting is Succeeded.
+
+- Now we will call the `queue` function our proposal is pass.
+
+```bash
+  npx hardhat run scripts/queueProposal.js --network mumbai
+```
+
+- It will give state `5` means our proposal is `Succeeded`.
+
+- Now our proposal is in Queue.
+
+- Now we will Execute the proposal.
+
+```bash
+  npx hardhat run scripts/executeProposal.js --network mumbai
+```
+
+- It will give state `7` means our proposal is `Executed`.
+
+- Our proposal is successfully executed.
+
+#### Get item
+
+## Treasury
+
+- You have to send some ether or any ERC20Token or ERC721 to Treasury.
+- This contract will store the ether. Anyone can send the ether to this contract.
+- Only owner can withdraw the funds.
+- It transfer ownership to `TimeLock` Contract using `transferOwnership` function.
+
+## Important Step
+
+```bash
+create .env file in root directory.
+```
+
+```bash
+    API_URL = "https://eth-ropsten.alchemyapi.io/v2/your-api-key"
+    PRIVATE_KEY = "YOUR-METAMASK-MNEMONICS"
+    POLYGON_SCAN_API_KEY = "YOUR-POLYGON_SCAN_API_KEY"
+
+```
+
+-Get Your API Key
+
+- [Alchemy](https://alchemy.com/?r=36af7883c4699196)
+
+-Get Your Matic Mumbai Faucet
+
+- [Matic Mumbai Faucet](https://mumbaifaucet.com/)
+
+## NPM Packages
+
+- [Openzeppelin](https://www.npmjs.com/package/@openzeppelin/contracts)
+- [Hardhat-Ethers](https://www.npmjs.com/package/hardhat-ethers)
+- [Chai](https://www.npmjs.com/package/chai)
+- [Ethers](https://www.npmjs.com/package/ethers)
+- [Ethereum-Waffle](https://www.npmjs.com/package/ethereum-waffle)
+- [Dotenv](https://www.npmjs.com/package/dotenv)
+- [Hardhat-Etherscan](https://www.npmjs.com/package/@nomiclabs/hardhat-etherscan)
+
+## Tech Stack
+
+- [Node](https://nodejs.org/en/)
+- [Hardhat](https://hardhat.org/)
+- [Solidity](https://docs.soliditylang.org/)
+- [Openzeppelin](https://openzeppelin.com/)
+
+## Run Locally
+
+Clone the project
+
+```bash
+  git clone https://github.com/karangorania/multi-token-DAO
+```
+
+Go to the project directory
+
+```bash
+  cd multi-token-DAO
+```
+
+Install dependencies
+
+```bash
+  npm install
+```
+
+Compile
+
+```bash
+  npx hardhat compile
+```
+
+Test
+
+```bash
+  npx hardhat test
+```
+
+Deploy
+
+```bash
+  node scripts/deploy.js
+```
+
+Deploy on Mumbai
+
+```bash
+  npx hardhat run scripts/deploy.js --network mumbai
+```
+
+Verify Contract
+
+```bash
+npx hardhat verify --network mumbai <YOUR_CONTRACT_ADDRESS>
+```
+
+Help
+
+```bash
+  npx hardhat help
+```
+
+# Check on Mumbai Explorer
+
+## Deploy Contract
+
+- [NappyToken](https://mumbai.polygonscan.com/address/0x516a6FDCA5504489888c51Da244678411cF38Fe2)
+- [NappyNFT](https://mumbai.polygonscan.com/address/0x0c85214E55324d86395A8148Fe4FB395f185Ae02)
+- [TimeLock](https://mumbai.polygonscan.com/address/0xf43d582A34BfD50395CB8A96150E54a89D507BE3)
+- [Governance](https://mumbai.polygonscan.com/address/0x4dDe5bc62a29DE1e7aE84902E8D0ddA7Fb0D03fE)
+- [Treasury](https://mumbai.polygonscan.com/address/0x7dfBd09387E7b903edb40db98515bAF8c3158722)
+
+# Transaction
+
+## Proposal ID
+
+- [Proposal ID](63443021524830328481685862710718740376614608430634741687791276264061360147468)
+
+- [WithdrawMatic](https://mumbai.polygonscan.com/tx/0x2b1e493272a23a2349073e98022443f157e421c0fa3838cbfc4411273e36e1b6)
