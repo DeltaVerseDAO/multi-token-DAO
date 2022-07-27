@@ -24,7 +24,7 @@ In MultiToken DAO either you can vote with Token or NFT.
 
 ## NappyNFT
 
-- Token Name: NappyNFT 
+- Token Name: NappyNFT
 - NFT Symbol: NPY
 - NappyNFt will use to mint NFT and transfer to voter for use in voting.
 - First owner will mint the NFT. There is no fixed supply to mint the NFT.
@@ -141,7 +141,7 @@ create .env file in root directory.
 ```
 
 ```bash
-    API_URL = "https://eth-ropsten.alchemyapi.io/v2/your-api-key"
+    API_URL = "https://polygonscan.com/myapikey"
     PRIVATE_KEY = "YOUR-METAMASK-MNEMONICS"
     POLYGON_SCAN_API_KEY = "YOUR-POLYGON_SCAN_API_KEY"
 
